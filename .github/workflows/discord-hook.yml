@@ -24,26 +24,26 @@ jobs:
           if [[ $file == be-토픽/* ]]; then
             WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_BE_URL }}
             CATEGORY="be-토픽"
-          # elif [[ $file == fe-토픽/* ]]; then
-          #   WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_FE_URL }}
-          #   CATEGORY="fe-토픽"
-          # elif [[ $file == 인프라-토픽/* ]]; then
-          #   WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_INFRA_URL }}
-          #   CATEGORY="인프라-토픽"
-          # elif [[ $file == 컴퓨터-공학-토픽/* ]]; then
-          #   WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_CS_URL }}
-          #   CATEGORY="컴퓨터-공학 토픽"
-          # elif [[ $file == 이외-토픽/* ]]; then
-          #   WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_MISC_URL }}
-          #   CATEGORY="이외-토픽"
-          # elif [[ $file == 공유-이벤트/* ]]; then
-          #   WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_EVENTS_URL }}
-          #   CATEGORY="공유-이벤트"
-          # elif [[ $file == 공유-생산성-툴/* ]]; then
-          #   WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_TOOLS_URL }}
-          #   CATEGORY="공유-생산성 툴"
-          # else
-          #   continue
+          elif [[ $file == fe-토픽/* ]]; then
+            WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_FE_URL }}
+            CATEGORY="fe-토픽"
+          elif [[ $file == 인프라-토픽/* ]]; then
+            WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_INFRA_URL }}
+            CATEGORY="인프라-토픽"
+          elif [[ $file == 컴퓨터-공학-토픽/* ]]; then
+            WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_CS_URL }}
+            CATEGORY="컴퓨터-공학 토픽"
+          elif [[ $file == 이외-토픽/* ]]; then
+            WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_MISC_URL }}
+            CATEGORY="이외-토픽"
+          elif [[ $file == 공유-이벤트/* ]]; then
+            WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_EVENTS_URL }}
+            CATEGORY="공유-이벤트"
+          elif [[ $file == 공유-생산성-툴/* ]]; then
+            WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_TOOLS_URL }}
+            CATEGORY="공유-생산성 툴"
+          else
+            continue
           fi
 
           TITLE=$(basename "$file" .md)
