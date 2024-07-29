@@ -29,5 +29,5 @@ jobs:
         COMMIT_BODY="${{ steps.get_commit.outputs.body }}"
         curl -H "Content-Type: application/json" \
              -X POST \
-             -d "{\"content\": \"New commit in the repository:\ntitle: ${COMMIT_TITLE}\n\n${COMMIT_BODY}\"}" \
+             -d "{\"content\": \"[공유] - ${COMMIT_TITLE}\n${COMMIT_BODY}\"}" \
              $DISCORD_WEBHOOK_URL
