@@ -1,48 +1,29 @@
-name: Notify Discord on Commit
+name: Notify Discord on Push
 
 on:
   push:
     paths:
       - 'be-토픽/**'
-      - 'fe-토픽/**'
 
 jobs:
-  notify-discord:
+  notify:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Set up Git
-        uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Determine which directory was changed
-        id: determine-directory
-        run: |
-          if git diff-tree --no-commit-id --name-only -r ${{ github.sha }} | grep -q '^be-토픽/'; then
-            echo "directory=be-토픽" >> $GITHUB_ENV
-          elif git diff-tree --no-commit-id --name-only -r ${{ github.sha }} | grep -q '^fe-토픽/'; then
-            echo "directory=fe-토픽" >> $GITHUB_ENV
-          else
-            echo "No relevant changes found."
-            exit 1
-          fi
+    - name: Get commit message
+      id: get_commit
+      run: |
+        echo "::set-output name=title::$(git log -1 --pretty=%s)"
+        echo "::set-output name=content::$(git log -1 --pretty=%b)"
 
-      - name: Send Discord Notification
-        env:
-          DISCORD_WEBHOOK_BE: ${{ secrets.DISCORD_WEBHOOK_BE }}
-          DISCORD_WEBHOOK_FE: ${{ secrets.DISCORD_WEBHOOK_FE }}
-          DIRECTORY: ${{ env.directory }}
-        run: |
-          if [ "$DIRECTORY" = "be-토픽" ]; then
-            WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_BE }}
-          elif [ "$DIRECTORY" = "fe-토픽" ]; then
-            WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_FE }}
-          else
-            echo "Unknown directory."
-            exit 1
-          fi
-
-          COMMIT_MESSAGE=$(git log -1 --pretty=format:'%s')
-          COMMIT_URL=${{ github.event.head_commit.url }}
-          AUTHOR_NAME=${{ github.event.head_commit.author.name }}
-          curl -H "Content-Type: application/json" \
-               -d "{\"content\": \"**New Commit**\nAuthor: $AUTHOR_NAME\nMessage: $COMMIT_MESSAGE\n[View Commit]($COMMIT_URL)\"}" \
-               $WEBHOOK_URL
+    - name: Send Discord notification
+      uses: wei/curl@v1
+      with:
+        args: |
+          -X POST \
+          -H "Content-Type: application/json" \
+          -d "{\"content\":\"New commit pushed to /be-토픽:\n\n**Title:** ${{ steps.get_commit.outputs.title }}\n**Content:** ${{ steps.get_commit.outputs.content }}\"}" \
+          ${{ secrets.DISCORD_WEBHOOK_BE }}
