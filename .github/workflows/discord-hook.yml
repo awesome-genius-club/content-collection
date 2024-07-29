@@ -12,9 +12,9 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Find changed files
-      id: find-files
+    - name: Set up environment
       run: |
+        git fetch --depth=2  # Ensure we have enough history to diff
         CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
         echo "CHANGED_FILES=$CHANGED_FILES" >> $GITHUB_ENV
 
