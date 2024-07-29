@@ -23,7 +23,6 @@ jobs:
       uses: wei/curl@v1
       with:
         args: |
-          -X POST \
           -H "Content-Type: application/json" \
           -d "{\"content\":\"New commit pushed to /be-토픽:\n\n**Title:** ${{ steps.get_commit.outputs.title }}\n**Content:** ${{ steps.get_commit.outputs.content }}\"}" \
           ${{ secrets.DISCORD_WEBHOOK_BE }}
