@@ -17,20 +17,19 @@ jobs:
         id: determine-directory
         run: |
           if git diff-tree --no-commit-id --name-only -r ${{ github.sha }} | grep -q '^be-토픽/'; then
-            echo "::set-output name=directory::be-토픽"
+            echo "directory=be-토픽" >> $GITHUB_ENV
           elif git diff-tree --no-commit-id --name-only -r ${{ github.sha }} | grep -q '^fe-토픽/'; then
-            echo "::set-output name=directory::fe-토픽"
+            echo "directory=fe-토픽" >> $GITHUB_ENV
           else
             echo "No relevant changes found."
             exit 1
-          fi
 
       - name: Send Discord Notification
         env:
           DISCORD_WEBHOOK_BE: ${{ secrets.DISCORD_WEBHOOK_BE }}
           DISCORD_WEBHOOK_FE: ${{ secrets.DISCORD_WEBHOOK_FE }}
+          DIRECTORY: ${{ env.directory }}
         run: |
-          DIRECTORY=${{ steps.determine-directory.outputs.directory }}
           if [ "$DIRECTORY" = "be-토픽" ]; then
             WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_BE }}
           elif [ "$DIRECTORY" = "fe-토픽" ]; then
