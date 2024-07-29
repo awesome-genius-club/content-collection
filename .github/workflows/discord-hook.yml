@@ -1,4 +1,4 @@
-name: Notify Discord on Push
+name: Notify Discord on Commit
 
 on:
   push:
@@ -6,23 +6,23 @@ on:
       - 'be-토픽/**'
 
 jobs:
-  notify:
+  notify-discord:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
-    - name: Get commit message
+    - name: Get last commit message
       id: get_commit
-      run: |
-        echo "::set-output name=title::$(git log -1 --pretty=%s)"
-        echo "::set-output name=content::$(git log -1 --pretty=%b)"
+      run: echo "::set-output name=message::$(git log -1 --pretty=format:'%s%n%b')"
 
-    - name: Send Discord notification
-      uses: wei/curl@v1
-      with:
-        args: |
-          -H "Content-Type: application/json" \
-          -d "{\"content\":\"New commit pushed to /be-토픽:\n\n**Title:** ${{ steps.get_commit.outputs.title }}\n**Content:** ${{ steps.get_commit.outputs.content }}\"}" \
-          ${{ secrets.DISCORD_WEBHOOK_BE }}
+    - name: Send message to Discord
+      env:
+        DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_BE }}
+      run: |
+        COMMIT_MESSAGE="${{ steps.get_commit.outputs.message }}"
+        curl -H "Content-Type: application/json" \
+             -X POST \
+             -d "{\"content\": \"New commit in the repository:\n${COMMIT_MESSAGE}\"}" \
+             $DISCORD_WEBHOOK_URL
