@@ -8,19 +8,22 @@ on:
 jobs:
   notify:
     runs-on: ubuntu-latest
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
 
     - name: Set up environment
       run: |
-        git fetch --depth=2  # Ensure we have enough history to diff
+        git fetch --depth=2
         CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
         echo "CHANGED_FILES=$CHANGED_FILES" >> $GITHUB_ENV
+        echo "Changed files: $CHANGED_FILES"
 
     - name: Send notification to Discord
       run: |
         for file in ${{ env.CHANGED_FILES }}; do
+          echo "Processing file: $file"
           if [[ $file == be-토픽/* ]]; then
             WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_BE_URL }}
             CATEGORY="be-토픽"
@@ -46,12 +49,17 @@ jobs:
             continue
           fi
 
-          echo "${{ secrets.DISCORD_WEBHOOK_BE_URL }}"
-
           TITLE=$(basename "$file" .md)
           URL="https://github.com/${{ github.repository }}/blob/${{ github.sha }}/$file"
+          echo "Title: $TITLE, URL: $URL, Webhook URL: $WEBHOOK_URL"
 
-          curl -H "Content-Type: application/json" \
-               -d "{\"content\": \"New update in $CATEGORY:\n**$TITLE**\n$URL\"}" \
-               $WEBHOOK_URL
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" -H "Content-Type: application/json" \
+            -d "{\"content\": \"New update in $CATEGORY:\n**$TITLE**\n$URL\"}" \
+            $WEBHOOK_URL)
+
+          if [ $RESPONSE -ne 204 ]; then
+            echo "Error sending webhook for $file, received status code: $RESPONSE"
+          else
+            echo "Successfully sent webhook for $file"
+          fi
         done
