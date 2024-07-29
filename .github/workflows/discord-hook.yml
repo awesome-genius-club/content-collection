@@ -46,6 +46,8 @@ jobs:
             continue
           fi
 
+          echo "${{ secrets.DISCORD_WEBHOOK_BE_URL }}"
+
           TITLE=$(basename "$file" .md)
           URL="https://github.com/${{ github.repository }}/blob/${{ github.sha }}/$file"
 
