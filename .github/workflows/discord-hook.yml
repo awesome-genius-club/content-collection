@@ -15,7 +15,11 @@ jobs:
 
     - name: Get last commit message
       id: get_commit
-      run: echo "::set-output name=message::$(git log -1 --pretty=format:'%s%n%b')"
+      run: |
+        COMMIT_TITLE=$(git log -1 --pretty=format:'%s')
+        COMMIT_BODY=$(git log -1 --pretty=format:'%b')
+        echo "::set-output name=title::${COMMIT_TITLE}"
+        echo "::set-output name=body::${COMMIT_BODY}"
 
     - name: Send message to Discord
       env:
