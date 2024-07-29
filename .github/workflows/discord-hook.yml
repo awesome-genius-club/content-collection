@@ -1,53 +1,118 @@
-name: Notify Discord on md file changes
+# name: Notify Discord on md file changes
 
+# on:
+#   push:
+#     paths:
+#       - '**/*.md'
+
+# jobs:
+#   notify:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#     - name: Checkout repository
+#       uses: actions/checkout@v2
+
+#     - name: Set up environment
+#       run: |
+#         git fetch --depth=2
+#         CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
+#         echo "CHANGED_FILES=$CHANGED_FILES" >> $GITHUB_ENV
+#         echo "Changed files: $CHANGED_FILES"
+
+#     - name: Send notification to Discord
+#       run: |
+#         for file in ${{ env.CHANGED_FILES }}; do
+#           echo "Processing file: $file"
+#           if [[ $file == be-토픽/* ]]; then
+#             WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_BE_URL }}
+#             CATEGORY="be-토픽"
+#           elif [[ $file == fe-토픽/* ]]; then
+#             WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_FE_URL }}
+#             CATEGORY="fe-토픽"
+#           elif [[ $file == 인프라-토픽/* ]]; then
+#             WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_INFRA_URL }}
+#             CATEGORY="인프라-토픽"
+#           elif [[ $file == 컴퓨터-공학-토픽/* ]]; then
+#             WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_CS_URL }}
+#             CATEGORY="컴퓨터-공학 토픽"
+#           elif [[ $file == 이외-토픽/* ]]; then
+#             WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_MISC_URL }}
+#             CATEGORY="이외-토픽"
+#           elif [[ $file == 공유-이벤트/* ]]; then
+#             WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_EVENTS_URL }}
+#             CATEGORY="공유-이벤트"
+#           elif [[ $file == 공유-생산성-툴/* ]]; then
+#             WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_TOOLS_URL }}
+#             CATEGORY="공유-생산성 툴"
+#           else
+#             continue
+#           fi
+
+#           TITLE=$(basename "$file" .md)
+#           URL="https://github.com/${{ github.repository }}/blob/${{ github.sha }}/$file"
+#           echo "Title: $TITLE, URL: $URL, Webhook URL: $WEBHOOK_URL"
+
+#           RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" -H "Content-Type: application/json" \
+#             -d "{\"content\": \"New update in $CATEGORY:\n**$TITLE**\n$URL\"}" \
+#             $WEBHOOK_URL)
+
+#           if [ $RESPONSE -ne 204 ]; then
+#             echo "Error sending webhook for $file, received status code: $RESPONSE"
+#           else
+#             echo "Successfully sent webhook for $file"
+#           fi
+#         done
+
+
+name: Notify Discord on md file changes
 on:
   push:
     paths:
       - '**/*.md'
-
 jobs:
   notify:
     runs-on: ubuntu-latest
-
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-
     - name: Set up environment
       run: |
         git fetch --depth=2
         CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
         echo "CHANGED_FILES=$CHANGED_FILES" >> $GITHUB_ENV
         echo "Changed files: $CHANGED_FILES"
-
     - name: Send notification to Discord
       run: |
-        for file in ${{ env.CHANGED_FILES }}; do
-          echo "Processing file: $file"
-          if [[ $file == be-토픽/* ]]; then
-            WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_BE_URL }}
-            CATEGORY="be-토픽"
-          elif [[ $file == fe-토픽/* ]]; then
-            WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_FE_URL }}
-            CATEGORY="fe-토픽"
-          elif [[ $file == 인프라-토픽/* ]]; then
-            WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_INFRA_URL }}
-            CATEGORY="인프라-토픽"
-          elif [[ $file == 컴퓨터-공학-토픽/* ]]; then
-            WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_CS_URL }}
-            CATEGORY="컴퓨터-공학 토픽"
-          elif [[ $file == 이외-토픽/* ]]; then
-            WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_MISC_URL }}
-            CATEGORY="이외-토픽"
-          elif [[ $file == 공유-이벤트/* ]]; then
-            WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_EVENTS_URL }}
-            CATEGORY="공유-이벤트"
-          elif [[ $file == 공유-생산성-툴/* ]]; then
-            WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_TOOLS_URL }}
-            CATEGORY="공유-생산성 툴"
-          else
-            continue
-          fi
+        # for file in ${{ env.CHANGED_FILES }}; do
+        #   echo "Processing file: $file"
+        #   if [[ $file == be-토픽/* ]]; then
+        #     WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_BE_URL }}
+        #     CATEGORY="be-토픽"
+        #   elif [[ $file == fe-토픽/* ]]; then
+        #     WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_FE_URL }}
+        #     CATEGORY="fe-토픽"
+        #   elif [[ $file == 인프라-토픽/* ]]; then
+        #     WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_INFRA_URL }}
+        #     CATEGORY="인프라-토픽"
+        #   elif [[ $file == 컴퓨터-공학-토픽/* ]]; then
+        #     WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_CS_URL }}
+        #     CATEGORY="컴퓨터-공학 토픽"
+        #   elif [[ $file == 이외-토픽/* ]]; then
+        #     WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_MISC_URL }}
+        #     CATEGORY="이외-토픽"
+        #   elif [[ $file == 공유-이벤트/* ]]; then
+        #     WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_EVENTS_URL }}
+        #     CATEGORY="공유-이벤트"
+        #   elif [[ $file == 공유-생산성-툴/* ]]; then
+        #     WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_TOOLS_URL }}
+        #     CATEGORY="공유-생산성 툴"
+        #   else
+        #     continue
+        #   fi
+
+          WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_BE_URL }}
+          CATEGORY="be-토픽"
 
           TITLE=$(basename "$file" .md)
           URL="https://github.com/${{ github.repository }}/blob/${{ github.sha }}/$file"
@@ -63,3 +128,4 @@ jobs:
             echo "Successfully sent webhook for $file"
           fi
         done
+
