@@ -25,8 +25,9 @@ jobs:
       env:
         DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_BE }}
       run: |
-        COMMIT_MESSAGE="${{ steps.get_commit.outputs.message }}"
+        COMMIT_TITLE="${{ steps.get_commit.outputs.title }}"
+        COMMIT_BODY="${{ steps.get_commit.outputs.body }}"
         curl -H "Content-Type: application/json" \
              -X POST \
-             -d "{\"content\": \"New commit in the repository:\n${COMMIT_MESSAGE}\"}" \
+             -d "{\"content\": \"New commit in the repository:\ntitle: ${COMMIT_TITLE}\n\n${COMMIT_BODY}\"}" \
              $DISCORD_WEBHOOK_URL
