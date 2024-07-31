@@ -1,0 +1,33 @@
+name: FE-Notify Discord on Commit
+
+on:
+  push:
+    paths:
+      - 'fe-토픽/**'
+
+jobs:
+  notify-discord:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Get last commit message
+      id: get_commit
+      run: |
+        COMMIT_TITLE=$(git log -1 --pretty=format:'%s')
+        COMMIT_BODY=$(git log -1 --pretty=format:'%b')
+        echo "::set-output name=title::${COMMIT_TITLE}"
+        echo "::set-output name=body::${COMMIT_BODY}"
+
+    - name: Send message to Discord
+      env:
+        DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_FE }}
+      run: |
+        COMMIT_TITLE="${{ steps.get_commit.outputs.title }}"
+        COMMIT_BODY="${{ steps.get_commit.outputs.body }}"
+        curl -H "Content-Type: application/json" \
+             -X POST \
+             -d "{\"content\": \"[공유] - ${COMMIT_TITLE}\n${COMMIT_BODY}\"}" \
+             $DISCORD_WEBHOOK_URL
