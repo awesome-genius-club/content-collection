@@ -7,4 +7,5 @@
 
 Netty를 통한 TCP 통신 Connection 구축 - Link: https://medium.com/daangn/netty%EB%A5%BC-%ED%99%9C%EC%9A%A9%ED%95%9C-%EB%8C%80%EC%99%B8%EA%B8%B0%EA%B4%80-tcp-%ED%86%B5%EC%8B%A0-%EC%97%B0%EB%8F%99%EA%B8%B0-04cbd281fe44
 
+넷플릭스 Java 21 - Link: https://netflixtechblog.com/java-21-virtual-threads-dude-wheres-my-lock-3052540e231d
 
